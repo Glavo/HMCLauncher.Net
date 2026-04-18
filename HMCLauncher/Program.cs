@@ -1,9 +1,11 @@
 namespace HMCLauncher
 {
-    internal class Program
+    internal static class Program
     {
-        public static void Main(string[] args)
+        [System.STAThread]
+        private static int Main(string[] args)
         {
+            return LauncherApp.Run();
         }
     }
 }

@@ -6,7 +6,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <ProjectGuid>{08029859-B93D-4491-8C0E-1FC445127DF4}</ProjectGuid>
-        <OutputType>Exe</OutputType>
+        <OutputType>WinExe</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>HMCLauncher</RootNamespace>
         <AssemblyName>HMCLauncher</AssemblyName>
@@ -37,9 +37,15 @@
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
+        <Reference Include="System.Windows.Forms"/>
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="JavaDiscovery.cs"/>
+        <Compile Include="LauncherApp.cs"/>
+        <Compile Include="LauncherLogger.cs"/>
+        <Compile Include="LauncherMessages.cs"/>
+        <Compile Include="PlatformInterop.cs"/>
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
