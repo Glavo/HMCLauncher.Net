@@ -10,6 +10,7 @@
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>HMCLauncher</RootNamespace>
         <AssemblyName>HMCLauncher</AssemblyName>
+        <ApplicationIcon>HMCL.ico</ApplicationIcon>
         <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -41,6 +42,7 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Content Include="HMCL.ico"/>
         <Compile Include="JavaDiscovery.cs"/>
         <Compile Include="LauncherApp.cs"/>
         <Compile Include="LauncherLogger.cs"/>
