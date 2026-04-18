@@ -1,0 +1,68 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-2022
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: HMCL-Dev/HMCL
+          ref: main
+          path: HMCL-Build
+
+      - name: Get short SHA
+        run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_ENV
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+          java-package: jdk+fx
+
+      - name: Build HMCLauncher
+        run: msbuild HMCLauncher.Net.sln /t:Build /p:Configuration=Release /p:Platform="Any CPU" /m
+
+      - name: Create checksum file
+        run: Out-File -InputObject (Get-FileHash -Path HMCLauncher\bin\Release\HMCLauncher.exe -Algorithm SHA256).Hash.ToLower() -FilePath HMCLauncher\bin\Release\HMCLauncher.exe.sha256 -NoNewline
+
+      - name: Build HMCL
+        run: |
+          $env:HMCL_LAUNCHER_EXE="$env:GITHUB_WORKSPACE\HMCLauncher\bin\Release\HMCLauncher.exe"
+          Set-Location "$env:GITHUB_WORKSPACE\HMCL-Build"
+          .\gradlew makeExecutables --no-daemon
+
+      - name: Copy Artifacts
+        run: |
+          New-Item -ItemType Directory -Path Artifacts -Force | Out-Null
+          Copy-Item -Path HMCL-Build\HMCL\build\libs\*.exe -Destination Artifacts
+          Copy-Item -Path HMCL-Build\HMCL\build\libs\*.exe.sha256 -Destination Artifacts
+          Copy-Item -Path HMCLauncher\bin\Release\HMCLauncher.exe -Destination Artifacts
+          Copy-Item -Path HMCLauncher\bin\Release\HMCLauncher.exe.sha256 -Destination Artifacts
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: HMCLauncher-${{ env.SHORT_SHA }}
+          path: Artifacts
+
+      - name: Create release
+        if: ${{ github.ref_type == 'tag' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            HMCLauncher/bin/Release/HMCLauncher.exe
+            HMCLauncher/bin/Release/HMCLauncher.exe.sha256
