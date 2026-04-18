@@ -42,7 +42,7 @@ namespace HMCLauncher
                 return;
             }
 
-            Console.WriteLine("[{0:HH:mm:ss}] [HMCLauncher] {1}", DateTime.Now, message);
+            Console.WriteLine("[{0:HH:mm:ss.fff}] [HMCLauncher] {1}", DateTime.Now, message);
         }
 
         public static void Verbose(string message)
